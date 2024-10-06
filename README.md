@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 import warnings
 warnings.filterwarnings('ignore')
-```
+
 ``` SQL
 SELECT *
 FROM hr_data;
