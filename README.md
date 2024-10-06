@@ -21,7 +21,7 @@ The dataset used in this project is titled as airpassengers.csv. It includes the
 ### Project Workflow
 
 1. Importing required libraries:
-   ```python
+```python
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
