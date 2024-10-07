@@ -5,7 +5,6 @@
 - [Project Overview](#project-overview)
 - [Dataset](#dataset)
 - [Project Workflow](#project-workflow)
-- [Recommendations](#recommendations)
 
 ### Project Overview
 
