@@ -106,7 +106,7 @@ plt.show()
 ![Screenshot (582)](https://github.com/user-attachments/assets/20cdc786-4622-4aec-91ac-b5af9b219acf)
 ### 5. Log Transformation:
 - Log transformation of passenger numbers to stabilize the seasonal components and make the series suitable for additive models.
-### - logy=logtrend+logseasonality+logresidual(irregularity)
+- ### logy=logtrend+logseasonality+logresidual(irregularity)
 - By doing so we can remove the change in seasonality, so the seasonality becomes constant and we can represent this multiplicative model as additive model
 ```python
 df_log=df.copy()
