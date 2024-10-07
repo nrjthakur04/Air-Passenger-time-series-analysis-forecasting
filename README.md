@@ -76,7 +76,8 @@ df.loc['1960-04']
 ```
 ![Screenshot (579)](https://github.com/user-attachments/assets/69cdd6f5-94be-44cc-9bb0-169f5a557031)
 
-- To understand our time series data in a better way, we'll first plot the time series so as to view the data fluctuations
+### 3. Time Series Plot:
+- To understand our time series data in a better way, we'll first visualize the original time series to observe patterns in passenger numbers over time.
 ```python
 df.plot()
 plt.show()
@@ -94,17 +95,19 @@ plt.show()
 ```
 ![Screenshot (581)](https://github.com/user-attachments/assets/0aa77d5f-0e92-4e22-931b-52211c904cac)
 
-- As we can see the trend is countinously increasing (seanonal component varies wrt each other in different time series) and the seasonality is not constant.
-- We know that if seasonality is not constant and changes over trend then we use multiplicative model to decompose the time series.
+### 4. Time Series Decomposition:
+- As we can see the trend is countinously increasing (seasonal component varies wrt each other in different time series) and the seasonality is not constant.
+- Use the seasonal_decompose() function to break down the time series into its components: trend, seasonality, and residuals.
+- We know that if seasonality is not constant and changes wrt trend then we'll use multiplicative model to decompose the time series, and then apply a log transformation to convert it into an additive model.
 ```python
 df_mul_decompose=seasonal_decompose(df,model='multiplicative')
 df_mul_decompose.plot()
 plt.show()
 ```
 ![Screenshot (582)](https://github.com/user-attachments/assets/20cdc786-4622-4aec-91ac-b5af9b219acf)
-
-- We can convert multiplicative model to additive model by using log
-- logy=logtrend+logseasonality+logresidual(irregularity)
+### 5. Log Transformation:
+- Log transformation of passenger numbers to stabilize the seasonal components and make the series suitable for additive models.
+### - logy=logtrend+logseasonality+logresidual(irregularity)
 - By doing so we can remove the change in seasonality, so the seasonality becomes constant and we can represent this multiplicative model as additive model
 ```python
 df_log=df.copy()
@@ -131,7 +134,8 @@ plt.show()
 
 " In above figure, we can see that the variation in seasonal pattern has reduced(If we compare the seasonal pattern in last 4 they are same or constant)"
 
-- Compare with the original time series
+### 6. Model Comparison:
+- Compare the original time series with the log-transformed series to identify the differences in seasonality and trend stability.
 ```python
 plt.subplot(2,1,1)
 plt.title('Original Time Series',fontweight='bold')
@@ -151,7 +155,7 @@ df.Passengers
 ```
 ![Screenshot (586)](https://github.com/user-attachments/assets/34c030cb-02eb-430e-95cc-8cb6949678ed)
 
-5. Linear Regression for Future Prediction:
+## Linear Regression for Future Prediction:
 - Linear Regression (y=a+bx)
 - Use linear regression to model and predict future air passenger numbers based on the log-transformed data
 - Visualize the results and evaluate the model's performance.
@@ -160,21 +164,26 @@ df.Passengers
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 ```
+### Data Preparation:
+- We first log-transform the passenger data to stabilize variance.
 ```python
 # Prepare the data
 df_log = pd.read_csv('airpassengers.csv', parse_dates=['Year-Month'])
 df_log['Passengers'] = np.log(df_log['Passengers'])
 ```
+- The 'Year-Month' column is converted into a numerical format (ordinal values) to be used as the independent variable in linear regression.
 ```python
 # Convert 'Year-Month' to ordinal (numerical format)
 df_log['Year-Month'] = pd.to_datetime(df_log['Year-Month'])
 df_log['Time'] = df_log['Year-Month'].map(pd.Timestamp.toordinal)
 ```
+- Define the feature and target variable
 ```python
-# Define the feature and target variable
 X = df_log[['Time']]  # Time as the independent variable
 y = df_log['Passengers']  # Log-transformed passengers as the dependent variable.
 ```
+### Model Training:
+- We split the data into training and test sets, fitting the linear regression model to the training data.
 ```python
 # Split the data into training and test sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False)
@@ -184,6 +193,8 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle
 model = LinearRegression()
 model.fit(X_train, y_train)
 ```
+### Future Prediction:
+- The model is used to predict passenger counts for the next 12 months.
 ```python
 # Make predictions for training and test data
 y_pred_train = model.predict(X_train)
@@ -203,10 +214,14 @@ future_ordinals = future_dates.map(pd.Timestamp.toordinal).to_numpy().reshape(-1
 # Make predictions for future
 future_predictions = model.predict(future_ordinals)
 ```
+### Inverse Log Transformation:
+- After predicting, we apply the exponential function (np.exp) to the predicted log-transformed values to convert them back to the original passenger scale.
 ```python
 # Inverse log transformation to bring back to original scale
 future_passengers = np.exp(future_predictions)
 ```
+### Visualization:
+- Below graph shows the original data, the fitted values for both training and test data, and the future predictions.
 ```python
 # Visualize and plot original log-transformed data
 plt.figure(figsize=(12,8))
